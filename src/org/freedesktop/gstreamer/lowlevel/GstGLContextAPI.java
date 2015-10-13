@@ -26,6 +26,7 @@ import org.freedesktop.gstreamer.gl.GLContext;
 import org.freedesktop.gstreamer.gl.GLDisplay;
 import org.freedesktop.gstreamer.gl.GLPlatform;
 import org.freedesktop.gstreamer.gl.GLWindow;
+import org.freedesktop.gstreamer.lowlevel.annotations.CallerOwnsReturn;
 
 /**
  *
@@ -40,11 +41,11 @@ public interface GstGLContextAPI extends com.sun.jna.Library {
     public static final String GST_GL_CONTEXT_TYPE_WGL = "gst.gl.context.WGL";
     public static final String GST_GL_CONTEXT_TYPE_EAGL = "gst.gl.context.EAGL";
         
-    GLContext gst_gl_context_new(GLDisplay display);
-    GLContext gst_gl_context_new_wrapped(GLDisplay display, int handle, GLPlatform contextType, GLAPI availableApis);
+    @CallerOwnsReturn GLContext gst_gl_context_new(GLDisplay display);
+    @CallerOwnsReturn GLContext gst_gl_context_new_wrapped(GLDisplay display, int handle, GLPlatform contextType, GLAPI availableApis);
     boolean gst_gl_context_activate(GLContext context, boolean activate);
     GThread gst_gl_context_get_thread(GLContext context);
-    GLContext gst_gl_context_get_current();
+    @CallerOwnsReturn GLContext gst_gl_context_get_current();
     GLDisplay gst_gl_context_get_display(GLContext context);
     Pointer gst_gl_context_get_proc_address (GLContext context, String name);
     GLPlatform gst_gl_context_get_gl_platform(GLContext context);
