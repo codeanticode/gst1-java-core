@@ -149,7 +149,7 @@ public class GLContext extends GstObject {
         public volatile Pointer[] _gst_reserved = new Pointer[GstAPI.GST_PADDING];        
         
         @Override
-        protected List getFieldOrder() {
+        protected List<String> getFieldOrder() {
             return Arrays.asList(new String[]{
                 "parent_class", 
                 "get_current_context", "get_gl_context",
