@@ -29,6 +29,9 @@ import org.freedesktop.gstreamer.lowlevel.IntegerEnum;
 /**
  *
  * @author andres
+ * 
+ * http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-bad-libs/html/gl.html
+ *  
  */
 public enum GLAPI implements IntegerEnum {    
     GST_GL_API_NONE(0),
