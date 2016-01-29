@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.freedesktop.gstreamer.Buffer;
+import org.freedesktop.gstreamer.Caps;
 import org.freedesktop.gstreamer.Pad;
 import org.freedesktop.gstreamer.VideoChromaSite;
 import org.freedesktop.gstreamer.VideoColorMatrix;
@@ -50,15 +51,19 @@ public interface GstVideoAPI extends Library {
 	  
     GValue gst_video_frame_rate(Pad pad);
     boolean gst_video_get_size(Pad pad, int [] width, int [] height);
+    
+    void gst_video_info_from_caps(VideoInfoStruct info, Caps caps);
+    
     boolean gst_video_frame_map(VideoFrameStruct frame, VideoInfoStruct info,
                                 Buffer buffer, int flags);
+    void gst_video_frame_unmap(VideoFrameStruct frame);
     
     // http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-base-libs/html/gst-plugins-base-libs-gstvideo.html#GstVideoFormatInfo
     public static final class VideoFormatInfo extends com.sun.jna.Structure {
-      public volatile VideoFormat format;
-      public volatile String name;
-      public volatile String description;
-      public volatile VideoFormatFlags flags;
+      public volatile int /*VideoFormat*/ format;
+      public volatile Pointer/*String*/ name;
+      public volatile Pointer/*String*/ description;
+      public volatile int/*VideoFormatFlags*/ flags;
       public volatile int bits;
       public volatile int n_components;
       
@@ -71,12 +76,12 @@ public interface GstVideoAPI extends Library {
       public volatile int[] w_sub = new int[GST_VIDEO_MAX_COMPONENTS];
       public volatile int[] h_sub = new int[GST_VIDEO_MAX_COMPONENTS];
 
-      public volatile VideoFormat unpack_format;
+      public volatile int /*VideoFormat*/ unpack_format;
       public volatile Pointer unpack_func;
       public volatile int pack_lines;
       public volatile Pointer pack_func;
 
-      public volatile VideoTileMode tile_mode;
+      public volatile int/*VideoTileMode*/ tile_mode;
       public volatile int tile_ws;
       public volatile int tile_hs;
 
@@ -89,7 +94,7 @@ public interface GstVideoAPI extends Library {
           "shift", "depth", "pixel_stride", "n_planes", "plane", "poffset",
           "w_sub", "h_sub",
           "unpack_format", "unpack_func", "pack_lines", "pack_func",
-          "tile_mode", "tile_ws", "tile_hs"
+          "tile_mode", "tile_ws", "tile_hs", "_gst_reserved"
         });
       }
     }
@@ -104,7 +109,7 @@ public interface GstVideoAPI extends Library {
       @Override
       protected List<String> getFieldOrder() {
         return Arrays.asList(new String[]{
-          "finfo", "interlace_mode", "flags", "meta", "id", "data", "map"
+          "range", "matrix", "transfer", "primaries"
         });
       }
     }
@@ -112,22 +117,20 @@ public interface GstVideoAPI extends Library {
     public static final class VideoInfoAbi extends Union {      
       public volatile VideoMultiviewMode multiview_mode;
       public volatile VideoMultiviewFlags multiview_flags;
-//     public volatile GstBaseSrcAbi abi;
-//     public volatile Pointer[] _gst_reserved = new Pointer[GST_PADDING_LARGE - 1];
     }   
    
     // http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-base-libs/html/gst-plugins-base-libs-gstvideo.html#GstVideoInfo
     public static final class VideoInfoStruct extends com.sun.jna.Structure {
       public volatile VideoFormatInfo finfo;
 
-      public volatile VideoInterlaceMode interlace_mode;
-      public volatile VideoFlags flags;
+      public volatile int /*VideoInterlaceMode*/ interlace_mode;
+      public volatile int/*VideoFlags*/ flags;
       public volatile int width;
       public volatile int height;
       public volatile long size;
       public volatile int views;
 
-      public volatile VideoChromaSite chroma_site;
+      public volatile int /*VideoChromaSite*/ chroma_site;
       public volatile GstVideoColorimetry colorimetry;
 
       public volatile int par_n;
@@ -143,7 +146,9 @@ public interface GstVideoAPI extends Library {
       @Override
       protected List<String> getFieldOrder() {
         return Arrays.asList(new String[]{
-          "finfo", "interlace_mode", "flags", "meta", "id", "data", "map"
+          "finfo", "interlace_mode", "flags", "width", "height", "size", "views",
+          "chroma_site", "colorimetry", "par_n", "par_d", "fps_n", "fps_d",
+          "offset", "stride", "abi"
         });
       }
     }
@@ -152,7 +157,7 @@ public interface GstVideoAPI extends Library {
     // http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-base-libs/html/gst-plugins-base-libs-gstvideo.html#GstVideoFrame
     public static final class VideoFrameStruct extends com.sun.jna.Structure {
       public volatile VideoInfoStruct info;
-      public volatile VideoFrameFlags flags; // maybe just int?
+      public volatile int /*VideoFrameFlags*/ flags; // maybe just int?
 
       public volatile Buffer buffer;
       public volatile Pointer meta;

@@ -1,6 +1,6 @@
 package org.freedesktop.gstreamer;
 
-public enum  VideoFormat {
+public enum VideoFormat {
   /** Unknown or unset video format id **/
   GST_VIDEO_FORMAT_UNKNOWN,
   

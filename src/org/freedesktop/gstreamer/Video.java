@@ -41,10 +41,22 @@ public class Video {
     	return GSTVIDEO_API.gst_video_get_size(pad, width, height) ? new Dimension(width [0], height [0]) : null;
     }
 
-    public static boolean mapVideoFrame(VideoFrameStruct frame,
-                                        VideoInfoStruct info,
-                                        Buffer buffer,
-                                        int flags) {
-      return GSTVIDEO_API.gst_video_frame_map(frame, info, buffer, flags);  
+    public static VideoInfoStruct getVideoInfo(Caps caps) {
+      VideoInfoStruct info = new VideoInfoStruct();
+      GSTVIDEO_API.gst_video_info_from_caps(info, caps);
+      return info;
+    }
+    
+    public static VideoFrameStruct mapVideoFrame(VideoInfoStruct info,
+                                                 Buffer buffer,
+                                                 int flags) {
+      VideoFrameStruct frame = new VideoFrameStruct();
+      boolean res = GSTVIDEO_API.gst_video_frame_map(frame, info, buffer, flags);
+      if (res) return frame;
+      else return null;
+    }
+    
+    public static void unmapVideoFrame(VideoFrameStruct frame) {
+      GSTVIDEO_API.gst_video_frame_unmap(frame);
     }
 }
