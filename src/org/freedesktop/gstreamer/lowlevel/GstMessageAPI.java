@@ -112,4 +112,7 @@ public interface GstMessageAPI extends com.sun.jna.Library {
     @CallerOwnsReturn Message gst_message_new_latency(GstObject src);
     @CallerOwnsReturn Message gst_message_new_custom(MessageType type, GstObject src, @Invalidate Structure structure);
     @ConstReturn Structure gst_message_get_structure(Message message);
+    @CallerOwnsReturn Message gst_message_new_need_context(GstObject src, String context_type);
+    // gboolean        gst_message_parse_context_type  (GstMessage * message, const gchar ** context_type);
+    @CallerOwnsReturn boolean gst_message_parse_context_type(Message message, String context_type);
 }

@@ -342,6 +342,15 @@ public class Bus extends GstObject {
         public void busMessage(Bus bus, Message message);
     }
 
+    public static interface NEED_CONTEXT {
+       /**
+        * Called when a {@link Pipeline} element posts a end-of-stream message.
+        * 
+        * @param source the element which posted the message.
+        */
+        public void needContext(GstObject source, Message msg);
+    }    
+    
     /**
      * Add a listener for end-of-stream messages.
      * 
@@ -667,6 +676,28 @@ public class Bus extends GstObject {
     public void disconnect(MESSAGE listener) {
         disconnect(MESSAGE.class, listener);
     }
+    
+    
+    public void connect(final NEED_CONTEXT listener) {
+      connect(NEED_CONTEXT.class, listener, new BusCallback() {
+          public boolean callback(Bus bus, Message msg, Pointer user_data) {
+              listener.needContext(msg.getSource(), msg);
+              return true;
+          }
+      });
+  }
+  
+  /**
+   * Disconnect the listener for end-of-stream messages.
+   * 
+   * @param listener The listener that was registered to receive the message.
+   */
+  public void disconnect(NEED_CONTEXT listener) {
+      disconnect(NEED_CONTEXT.class, listener);
+  }
+
+  
+    
     
     /**
      * Posts a {@link Message} on this Bus.

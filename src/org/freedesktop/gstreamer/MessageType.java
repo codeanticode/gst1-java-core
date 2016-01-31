@@ -154,6 +154,12 @@ public enum MessageType implements IntegerEnum {
      * 
      */
     STREAM_START(1 << 28),
+    
+    NEED_CONTEXT(1 << 29),
+    HAVE_CONTEXT(1 << 30),
+    MESSAGE_EXTENDED(1 << 31),
+    DEVICE_ADDED(1 << 31 + 1),
+    DEVICE_REMOVED(1 << 31 + 2),
 
     ANY(~0);
     
