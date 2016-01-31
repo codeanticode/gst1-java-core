@@ -40,9 +40,12 @@ import org.freedesktop.gstreamer.lowlevel.GValueAPI.GValue;
 import com.sun.jna.Library;
 import com.sun.jna.Pointer;
 import com.sun.jna.Union;
+import com.sun.jna.ptr.PointerByReference;
 
 /*
  * http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-base-libs/html/gst-plugins-base-libs-gstvideo.html
+ * 
+ * Great resource to see how to get structures from C by reference, etc.
  */
 public interface GstVideoAPI extends Library {
 	public final static GstVideoAPI GSTVIDEO_API = GstNative.load("gstvideo", GstVideoAPI.class);
@@ -51,15 +54,27 @@ public interface GstVideoAPI extends Library {
 	  
     GValue gst_video_frame_rate(Pad pad);
     boolean gst_video_get_size(Pad pad, int [] width, int [] height);
+
+    VideoInfoStruct.ByReference gst_video_info_new();
+    void gst_video_info_init (VideoInfoStruct.ByReference info);
+    VideoInfoStruct.ByReference gst_video_info_copy(VideoInfoStruct.ByReference info);
+    void gst_video_info_free(VideoInfoStruct.ByReference info);        
+    boolean gst_video_info_from_caps(VideoInfoStruct.ByReference info, Caps caps);
     
-    void gst_video_info_from_caps(VideoInfoStruct info, Caps caps);
+//    boolean gst_video_info_from_caps(VideoInfoStruct info, Caps caps);
+//    boolean gst_video_info_from_caps(PointerByReference info, Caps caps);
+
+    
     
     boolean gst_video_frame_map(VideoFrameStruct frame, VideoInfoStruct info,
                                 Buffer buffer, int flags);
     void gst_video_frame_unmap(VideoFrameStruct frame);
     
     // http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-base-libs/html/gst-plugins-base-libs-gstvideo.html#GstVideoFormatInfo
-    public static final class VideoFormatInfo extends com.sun.jna.Structure {
+    public static class VideoFormatInfo extends com.sun.jna.Structure {
+      public static class ByReference extends VideoFormatInfo implements com.sun.jna.Structure.ByReference {
+        
+      }
       public volatile int /*VideoFormat*/ format;
       public volatile Pointer/*String*/ name;
       public volatile Pointer/*String*/ description;
@@ -101,10 +116,10 @@ public interface GstVideoAPI extends Library {
     
    // http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-base-libs/html/gst-plugins-base-libs-gstvideo.html#GstVideoColorimetry
    public static final class GstVideoColorimetry extends com.sun.jna.Structure {
-     public volatile VideoColorRange range;
-     public volatile VideoColorMatrix matrix;
-     public volatile VideoTransferFunction transfer;
-     public volatile VideoColorPrimaries primaries;
+     public volatile /*VideoColorRange*/ int range;
+     public volatile /*VideoColorMatrix*/ int matrix;
+     public volatile /*VideoTransferFunction*/ int transfer;
+     public volatile /*VideoColorPrimaries*/ int primaries;
 
       @Override
       protected List<String> getFieldOrder() {
@@ -115,13 +130,29 @@ public interface GstVideoAPI extends Library {
     }
    
     public static final class VideoInfoAbi extends Union {      
-      public volatile VideoMultiviewMode multiview_mode;
-      public volatile VideoMultiviewFlags multiview_flags;
+      public volatile /*VideoMultiviewMode*/ int multiview_mode;
+      public volatile /*VideoMultiviewFlags*/ int multiview_flags;
     }   
    
     // http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-base-libs/html/gst-plugins-base-libs-gstvideo.html#GstVideoInfo
-    public static final class VideoInfoStruct extends com.sun.jna.Structure {
-      public volatile VideoFormatInfo finfo;
+    public static class VideoInfoStruct extends com.sun.jna.Structure {
+//    public static class VideoInfoStruct extends com.sun.jna.Structure implements com.sun.jna.Structure.ByReference {
+      public static class ByReference extends VideoInfoStruct implements com.sun.jna.Structure.ByReference {
+//        public ByReference() { }
+//        public ByReference(Pointer p) { 
+//          super(p);
+//          System.err.println("pointer by ref: " + p.toString());
+//          read(); 
+//        }                
+      }
+//      public VideoInfoStruct() { }
+//      public VideoInfoStruct(Pointer p) { 
+//        super(p);
+//        System.err.println("pointer by ref: " + p.toString());
+//        read(); 
+//      }
+      
+      public volatile VideoFormatInfo.ByReference finfo;
 
       public volatile int /*VideoInterlaceMode*/ interlace_mode;
       public volatile int/*VideoFlags*/ flags;
@@ -142,6 +173,13 @@ public interface GstVideoAPI extends Library {
       public volatile int[] stride = new int[GST_VIDEO_MAX_COMPONENTS];
 
       public volatile VideoInfoAbi abi;
+      
+//      public VideoInfoStruct() {}
+//      public VideoInfoStruct(Pointer ptr) {        
+//          useMemory(ptr);
+//          read();
+//          System.err.println("lala " + ptr.toString());
+//      }      
       
       @Override
       protected List<String> getFieldOrder() {

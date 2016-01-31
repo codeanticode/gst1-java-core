@@ -6,6 +6,10 @@ import java.awt.Dimension;
 import org.freedesktop.gstreamer.lowlevel.GstVideoAPI;
 import org.freedesktop.gstreamer.lowlevel.GstVideoAPI.VideoFrameStruct;
 import org.freedesktop.gstreamer.lowlevel.GstVideoAPI.VideoInfoStruct;
+
+import com.sun.jna.Pointer;
+import com.sun.jna.ptr.PointerByReference;
+
 import org.freedesktop.gstreamer.lowlevel.GValueAPI.GValue;
 
 public class Video {
@@ -41,10 +45,42 @@ public class Video {
     	return GSTVIDEO_API.gst_video_get_size(pad, width, height) ? new Dimension(width [0], height [0]) : null;
     }
 
-    public static VideoInfoStruct getVideoInfo(Caps caps) {
+    public static VideoInfoStruct.ByReference getVideoInfo(Caps caps) {
+      
+      VideoInfoStruct.ByReference info = GSTVIDEO_API.gst_video_info_new();
+      boolean res = GSTVIDEO_API.gst_video_info_from_caps(info, caps);
+      if (res) {
+        System.err.println("info.width: " + info.width);
+        System.err.println("info.height: " + info.height);        
+        return info;
+      }
+      else return null;
+      
+      
+      /*
+      // Following:
+      // http://jnaexamples.blogspot.com/2012/03/java-native-access-is-easy-way-to.html
+      PointerByReference pref = new PointerByReference();
+      boolean res = GSTVIDEO_API.gst_video_info_from_caps(pref, caps);
+      if (res) {
+        Pointer ptr = pref.getValue();
+        VideoInfoStruct info = new VideoInfoStruct(ptr);
+        System.err.println("info.width: " + info.width);
+        System.err.println("info.height: " + info.height);        
+        return info;        
+      } else return null;  
+      */    
+      
+      /*
       VideoInfoStruct info = new VideoInfoStruct();
-      GSTVIDEO_API.gst_video_info_from_caps(info, caps);
-      return info;
+      boolean res = GSTVIDEO_API.gst_video_info_from_caps(info, caps);
+      if (res) {
+        System.err.println("info.width: " + info.width);
+        System.err.println("info.height: " + info.height);        
+        return info;
+      }
+      else return null; 
+      */
     }
     
     public static VideoFrameStruct mapVideoFrame(VideoInfoStruct info,
