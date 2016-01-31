@@ -56,7 +56,7 @@ public interface GstVideoAPI extends Library {
     boolean gst_video_get_size(Pad pad, int [] width, int [] height);
 
     VideoInfoStruct.ByReference gst_video_info_new();
-    void gst_video_info_init (VideoInfoStruct.ByReference info);
+    void gst_video_info_init(VideoInfoStruct.ByReference info);
     VideoInfoStruct.ByReference gst_video_info_copy(VideoInfoStruct.ByReference info);
     void gst_video_info_free(VideoInfoStruct.ByReference info);        
     boolean gst_video_info_from_caps(VideoInfoStruct.ByReference info, Caps caps);
@@ -66,9 +66,10 @@ public interface GstVideoAPI extends Library {
 
     
     
-    boolean gst_video_frame_map(VideoFrameStruct frame, VideoInfoStruct info,
+    boolean gst_video_frame_map(VideoFrameStruct.ByReference frame, 
+                                VideoInfoStruct.ByReference info,
                                 Buffer buffer, int flags);
-    void gst_video_frame_unmap(VideoFrameStruct frame);
+    void gst_video_frame_unmap(VideoFrameStruct.ByReference frame);
     
     // http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-base-libs/html/gst-plugins-base-libs-gstvideo.html#GstVideoFormatInfo
     public static class VideoFormatInfo extends com.sun.jna.Structure {
@@ -193,16 +194,34 @@ public interface GstVideoAPI extends Library {
 
    
     // http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-base-libs/html/gst-plugins-base-libs-gstvideo.html#GstVideoFrame
-    public static final class VideoFrameStruct extends com.sun.jna.Structure {
-      public volatile VideoInfoStruct info;
+    public static class VideoFrameStruct extends com.sun.jna.Structure {
+      public static class ByReference extends VideoFrameStruct implements com.sun.jna.Structure.ByReference {
+//        public ByReference() { }
+//        public ByReference(Pointer p) { 
+//          super(p);
+//          System.err.println("pointer by ref: " + p.toString());
+//          read(); 
+//        }          
+      }
+//      public VideoFrameStruct() { }
+//      public VideoFrameStruct(Pointer p) { 
+//        super(p);
+//        System.err.println("pointer by ref: " + p.toString());
+//        read(); 
+//      }
+      
+      public volatile VideoInfoStruct.ByReference info;
       public volatile int /*VideoFrameFlags*/ flags; // maybe just int?
 
       public volatile Buffer buffer;
       public volatile Pointer meta;
       public volatile int id;
 
-      public volatile Pointer[] data = new Pointer[GST_VIDEO_MAX_PLANES];
-      public volatile GstBufferAPI.MapInfoStruct[] map = new GstBufferAPI.MapInfoStruct[GST_VIDEO_MAX_PLANES];
+//      public volatile Pointer[] data = new Pointer[GST_VIDEO_MAX_PLANES];
+//      public volatile GstBufferAPI.MapInfoStruct[] map = new GstBufferAPI.MapInfoStruct[GST_VIDEO_MAX_PLANES];
+
+      public volatile PointerByReference data;
+      public volatile GstBufferAPI.MapInfoStruct.ByReference map;
       
       @Override
       protected List<String> getFieldOrder() {

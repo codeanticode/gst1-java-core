@@ -42,7 +42,9 @@ public interface GstBufferAPI extends com.sun.jna.Library {
     public static final int GST_LOCK_FLAG_WRITE = (1 << 1);
     public static final int GST_MAP_READ = GST_LOCK_FLAG_READ;
     public static final int GST_MAP_WRITE = GST_LOCK_FLAG_WRITE;
-    public static final class MapInfoStruct extends com.sun.jna.Structure {
+    public static class MapInfoStruct extends com.sun.jna.Structure {
+      public static class ByReference extends MapInfoStruct implements com.sun.jna.Structure.ByReference {}
+      
     	public volatile Pointer memory; // Pointer to GstMemory
     	public volatile int flags; // GstMapFlags
         public volatile Pointer data;

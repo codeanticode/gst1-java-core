@@ -83,16 +83,17 @@ public class Video {
       */
     }
     
-    public static VideoFrameStruct mapVideoFrame(VideoInfoStruct info,
-                                                 Buffer buffer,
-                                                 int flags) {
-      VideoFrameStruct frame = new VideoFrameStruct();
+    public static VideoFrameStruct.ByReference mapVideoFrame(VideoInfoStruct.ByReference info,
+                                                             Buffer buffer,
+                                                             int flags) {
+      VideoFrameStruct.ByReference frame = new VideoFrameStruct.ByReference();
       boolean res = GSTVIDEO_API.gst_video_frame_map(frame, info, buffer, flags);
-      if (res) return frame;
-      else return null;
+      if (res) { 
+        return frame;
+      } else return null;
     }
     
-    public static void unmapVideoFrame(VideoFrameStruct frame) {
+    public static void unmapVideoFrame(VideoFrameStruct.ByReference frame) {
       GSTVIDEO_API.gst_video_frame_unmap(frame);
     }
 }
