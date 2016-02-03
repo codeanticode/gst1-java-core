@@ -88,9 +88,24 @@ public class Video {
                                                              int flags) {
       VideoFrameStruct.ByReference frame = new VideoFrameStruct.ByReference();
       boolean res = GSTVIDEO_API.gst_video_frame_map(frame, info, buffer, flags);
-      if (res) { 
+      if (frame != null) {
+        System.err.println("gst_video_frame_map " + res);
+        System.err.println("info.width: " + info.width);
+        System.err.println("info.height: " + info.height);        
+        System.err.println("frame.info.width: " + frame.info.width);
+        System.err.println("frame.info.height: " + frame.info.height);
+        System.err.println("info.finfo.format " + frame.info.finfo.format);
+        System.err.println("info.meta " + frame.meta);
         return frame;
-      } else return null;
+      }
+      return null;
+//      if (res) { 
+//        return frame;
+//      } else {
+//        System.out.println("fuck " + frame);
+//        return null;
+//      }
+      
     }
     
     public static void unmapVideoFrame(VideoFrameStruct.ByReference frame) {

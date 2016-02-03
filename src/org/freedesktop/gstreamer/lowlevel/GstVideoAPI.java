@@ -36,6 +36,7 @@ import org.freedesktop.gstreamer.VideoMultiviewMode;
 import org.freedesktop.gstreamer.VideoTileMode;
 import org.freedesktop.gstreamer.VideoTransferFunction;
 import org.freedesktop.gstreamer.lowlevel.GValueAPI.GValue;
+import org.freedesktop.gstreamer.lowlevel.GstBufferAPI.MapInfoStruct;
 
 import com.sun.jna.Library;
 import com.sun.jna.Pointer;
@@ -195,33 +196,26 @@ public interface GstVideoAPI extends Library {
    
     // http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-base-libs/html/gst-plugins-base-libs-gstvideo.html#GstVideoFrame
     public static class VideoFrameStruct extends com.sun.jna.Structure {
-      public static class ByReference extends VideoFrameStruct implements com.sun.jna.Structure.ByReference {
-//        public ByReference() { }
-//        public ByReference(Pointer p) { 
-//          super(p);
-//          System.err.println("pointer by ref: " + p.toString());
-//          read(); 
-//        }          
-      }
+      public static class ByReference extends VideoFrameStruct implements com.sun.jna.Structure.ByReference { }
 //      public VideoFrameStruct() { }
 //      public VideoFrameStruct(Pointer p) { 
 //        super(p);
-//        System.err.println("pointer by ref: " + p.toString());
-//        read(); 
+//        System.err.println("pointer by ref: " + p.toString());        
+//        read();
 //      }
       
-      public volatile VideoInfoStruct.ByReference info;
-      public volatile int /*VideoFrameFlags*/ flags; // maybe just int?
+      public volatile VideoInfoStruct info;
+      public volatile int flags;
 
       public volatile Buffer buffer;
       public volatile Pointer meta;
       public volatile int id;
 
-//      public volatile Pointer[] data = new Pointer[GST_VIDEO_MAX_PLANES];
-//      public volatile GstBufferAPI.MapInfoStruct[] map = new GstBufferAPI.MapInfoStruct[GST_VIDEO_MAX_PLANES];
+      public volatile Pointer[] data = new Pointer[GST_VIDEO_MAX_PLANES];
+      public volatile GstBufferAPI.MapInfoStruct[] map = new GstBufferAPI.MapInfoStruct[GST_VIDEO_MAX_PLANES];
 
-      public volatile PointerByReference data;
-      public volatile GstBufferAPI.MapInfoStruct.ByReference map;
+//      public volatile PointerByReference data;
+//      public volatile GstBufferAPI.MapInfoStruct.ByReference map;
       
       @Override
       protected List<String> getFieldOrder() {
