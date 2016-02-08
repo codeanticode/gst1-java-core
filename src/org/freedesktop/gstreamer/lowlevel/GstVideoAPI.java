@@ -196,13 +196,21 @@ public interface GstVideoAPI extends Library {
    
     // http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-base-libs/html/gst-plugins-base-libs-gstvideo.html#GstVideoFrame
     public static class VideoFrameStruct extends com.sun.jna.Structure {
-      public static class ByReference extends VideoFrameStruct implements com.sun.jna.Structure.ByReference { }
-//      public VideoFrameStruct() { }
-//      public VideoFrameStruct(Pointer p) { 
-//        super(p);
-//        System.err.println("pointer by ref: " + p.toString());        
-//        read();
-//      }
+      public static class ByReference extends VideoFrameStruct implements com.sun.jna.Structure.ByReference { 
+//        
+//        public ByReference() { }
+//        public ByReference(Pointer p) { 
+//          super(p);
+//          System.err.println("pointer by ref: " + p.toString());        
+//          read();
+//        }        
+      }
+      public VideoFrameStruct() { }
+      public VideoFrameStruct(Pointer p) { 
+        super(p);
+        System.err.println("pointer by ref: " + p.toString());        
+        read();
+      }
       
       public volatile VideoInfoStruct info;
       public volatile int flags;

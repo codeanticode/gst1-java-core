@@ -50,8 +50,9 @@ public class Video {
       VideoInfoStruct.ByReference info = GSTVIDEO_API.gst_video_info_new();
       boolean res = GSTVIDEO_API.gst_video_info_from_caps(info, caps);
       if (res) {
-        System.err.println("info.width: " + info.width);
-        System.err.println("info.height: " + info.height);        
+//        System.err.println("info.finfo.unpack_func: " + info.finfo.unpack_func);
+//        System.err.println("info.width: " + info.width);
+//        System.err.println("info.height: " + info.height);        
         return info;
       }
       else return null;
@@ -88,14 +89,23 @@ public class Video {
                                                              int flags) {
       VideoFrameStruct.ByReference frame = new VideoFrameStruct.ByReference();
       boolean res = GSTVIDEO_API.gst_video_frame_map(frame, info, buffer, flags);
-      if (frame != null) {
-        System.err.println("gst_video_frame_map " + res);
-        System.err.println("info.width: " + info.width);
-        System.err.println("info.height: " + info.height);        
-        System.err.println("frame.info.width: " + frame.info.width);
-        System.err.println("frame.info.height: " + frame.info.height);
-        System.err.println("info.finfo.format " + frame.info.finfo.format);
-        System.err.println("info.meta " + frame.meta);
+      if (res) {
+//        System.err.println("gst_video_frame_map " + res);
+//        System.err.println("info.width: " + info.width);
+//        System.err.println("info.height: " + info.height);        
+//        System.err.println("info.finfo.format " + frame.info.finfo.format);
+//        
+//        System.err.println("frame.id: " + frame.id);
+//        System.err.println("frame.info.width: " + frame.info.width);
+//        System.err.println("frame.info.height: " + frame.info.height);        
+//        System.err.println("frame.flags: " + frame.flags);
+//        System.err.println("frame.buffer: " + frame.buffer);        
+//        System.err.println("frame.meta: " + frame.meta);
+//        System.err.println("frame.data: " + frame.data);
+//        for (int i = 0; i < frame.data.length; i++) {
+//          System.err.println("  frame.data[" + i + "]: " + frame.data[i]);
+//        }
+        
         return frame;
       }
       return null;
